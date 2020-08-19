@@ -1,14 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import Room from './pages/Room';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+import Room from './pages/Room/Room';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import Flash from './components/Flash/Flash';
 
 library.add(fas)
+
 function App() {
   const [response, setResponse] = useState({
     message: '',
@@ -26,6 +29,26 @@ function App() {
       }
   }, [response])
 
+  const checkNotAuthenticated = () => {
+    return axios(
+      {
+        method: 'GET',
+        url: 'http://localhost:3050/api/auth/checknotauthenticated',
+        withCredentials: true,
+        headers: {'Content-Type': 'application/json' }
+      })
+  }
+
+  const checkAuthenticated = () => {
+    return axios(
+      {
+        method: 'GET',
+        url: 'http://localhost:3050/api/auth/checkauthenticated',
+        withCredentials: true,
+        headers: {'Content-Type': 'application/json' }
+      })
+  }
+
 
   return (
     <Router>
@@ -35,12 +58,14 @@ function App() {
               <Switch>
 
                 <Route path="/" exact>
-                  <Login response={response} setResponse={setResponse} />
+                  <Login response={response} setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
                 </Route>
-                <Route path="/register" exact>
-                  <Register response={response} setResponse={setResponse} />
+                <Route path="/register">
+                  <Register response={response} setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
                 </Route>
-                <Route path="/room" component={Room}></Route>
+                <Route path="/room">
+                  <Room checkAuthenticated={checkAuthenticated} />
+                </Route>
                 <Route path="*" component={NotFoundPage} />
 
               </Switch>

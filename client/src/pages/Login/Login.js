@@ -7,7 +7,7 @@ import Header from '../../components/Header/Header'
 import Button from '../../components/Button/Button'
 import Container1 from '../../components/Container1/Container1'
 
-const Login = ({response, setResponse}) => {
+const Login = ({response, setResponse, checkNotAuthenticated}) => {
     const history = useHistory()
     const [form, setForm] = useState({
         username: '',
@@ -42,6 +42,19 @@ const Login = ({response, setResponse}) => {
                 }
             })
     }
+
+    useEffect(() => {
+        let didCancel = false;
+        const fetchCheckNotAuthenticatedAPI = async () => {
+            const response = await checkNotAuthenticated();
+            if(!didCancel) {
+                if(response.data !== 'Ok') history.push('/room')
+            }
+        }
+
+        fetchCheckNotAuthenticatedAPI()
+        return () => { didCancel = true }
+    }, [])
 
     return (
         <Container1>
