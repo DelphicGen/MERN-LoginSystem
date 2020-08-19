@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Create todolist Schema & model
 const UserSchema = new Schema({
     username: {
         type: String,
