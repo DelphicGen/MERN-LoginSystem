@@ -1,0 +1,11 @@
+h1 {
+    width: fit-content;
+}
+
+span {
+    width: max-content;
+    font-size: 80px;
+    left: 20%;
+    top: -50%;
+    opacity: .1;
+}
