@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const initializePassport = require('./passport-config.js');
 const authRoutes = require("./routes/authRoutes");
+const channelRoutes = require('./routes/channelRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const User = require('./models/user');
 
@@ -49,6 +50,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/auth', authRoutes);
+app.use('/api/channel', channelRoutes);
 app.use('/api/user', chatRoutes);
 app.use(function(err, req, res, next) {
     res.locals.message = err.message;

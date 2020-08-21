@@ -6,7 +6,7 @@ import Header from '../../components/Header/Header'
 import Button from '../../components/Button/Button'
 import Container1 from '../../components/Container1/Container1'
 
-const Register = ({response, setResponse, checkNotAuthenticated}) => {
+const Register = ({setResponse, checkNotAuthenticated}) => {
     
     const history = useHistory();
     const [form, setForm] = useState({
@@ -31,19 +31,25 @@ const Register = ({response, setResponse, checkNotAuthenticated}) => {
             headers: {'Content-Type': 'application/json' }
             })
             .then(response => {
-                if(response.data === "Username is taken") {
+                if(response.data === "Username is taken" || response.data === "Password field is required") {
                     setResponse(prevResponse => ({
                         ...prevResponse,
                         message: response.data,
                         type: 'Error'
                     }))
-                } else {
+                } else if(response.data === "Ok") {
                     setResponse(prevResponse => ({
                         ...prevResponse,
                         message: "User successfully registered",
                         type: 'Success'
                     }))
                     history.push('/')
+                } else {
+                    setResponse(prevResponse => ({
+                        ...prevResponse,
+                        message: response.data.message,
+                        type: 'Error'
+                    }))
                 }
             })
     }
@@ -61,25 +67,25 @@ const Register = ({response, setResponse, checkNotAuthenticated}) => {
         return () => { didCancel = true }
     }, [])
 
-    useEffect(() => {
-        let timer
-        if(response) {
-            timer = setTimeout(function() {
-                setResponse('')
-            }, 6000)
-        }
-        return () => {
-            clearTimeout(timer)
-        }
-    }, [response])
+    // useEffect(() => {
+    //     let timer
+    //     if(response) {
+    //         timer = setTimeout(function() {
+    //             setResponse('')
+    //         }, 6000)
+    //     }
+    //     return () => {
+    //         clearTimeout(timer)
+    //     }
+    // }, [response])
 
     return (
         <Container1>
             <div className="text-white">
                 <Header text="Register" />
                 <div>
-                    <Input placeholder="Username" type="text" value={form.username} name="username" onChange={handleFormChange} />
-                    <Input placeholder="Password" type="password" value={form.password} name="password" onChange={handleFormChange} />
+                    <Input placeholder="Username" type="text" value={form.username} name="username" onChange={handleFormChange} required={true} />
+                    <Input placeholder="Password" type="password" value={form.password} name="password" onChange={handleFormChange} required={true} />
                     <Button onClick={register} text="Register" />
                 </div>
                 <br />

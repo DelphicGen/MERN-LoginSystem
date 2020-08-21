@@ -9,14 +9,20 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import Flash from './components/Flash/Flash';
+import Modal from './components/Modal/Modal';
 
 library.add(fas)
+export const modalContext = React.createContext()
 
 function App() {
+  
   const [response, setResponse] = useState({
     message: '',
     type: ''
   });
+
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
       let timer
       if(response) {
@@ -51,17 +57,24 @@ function App() {
 
 
   return (
-    <Router>
+    <modalContext.Provider value={
+      {
+        showModal,
+        setShowModal
+      }
+    }>
+      <Router>
         <div className="app-container">
           <div className="bg-gray-700 w-full min-h-screen overflow-hidden">
+              <Modal setResponse={setResponse} showModal={showModal} setShowModal={setShowModal} />
               <Flash message={response.message} type={response.type} />
               <Switch>
 
                 <Route path="/" exact>
-                  <Login response={response} setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
+                  <Login setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
                 </Route>
                 <Route path="/register">
-                  <Register response={response} setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
+                  <Register setResponse={setResponse} checkNotAuthenticated={checkNotAuthenticated} />
                 </Route>
                 <Route path="/room">
                   <Room checkAuthenticated={checkAuthenticated} />
@@ -73,6 +86,7 @@ function App() {
 
         </div>
       </Router>
+    </modalContext.Provider>
   );
 }
 

@@ -6,22 +6,25 @@ function Room({checkAuthenticated}) {
 
     const history = useHistory();
     useEffect(() => {
-      let didCancel = false;
-      const fetchCheckAuthenticatedAPI = async () => {
-          const response = await checkAuthenticated();
-          if(!didCancel) {
-              if(response.data !== 'Ok') history.push('/')
-          }
-      }
+        let didCancel = false;
+        const fetchCheckAuthenticatedAPI = async () => {
+            const response = await checkAuthenticated();
+            if(!didCancel) {
+                if(response.data !== 'Ok') history.push('/');
+            }
+        }
 
-      fetchCheckAuthenticatedAPI()
-      return () => { didCancel = true }
+        fetchCheckAuthenticatedAPI();
+        return () => { didCancel = true }
     }, [])
 
     return (
-        <React.Fragment>
+        <div className="flex">
             <Channels />
-        </React.Fragment>
+            <div className="ml-20 w-full h-screen overflow-auto">
+                
+            </div>
+        </div>
     )
 }
 
